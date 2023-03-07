@@ -43,15 +43,29 @@ public class StockPriceController {
 	// Client does'nt supports Async calls yet
 	// Feign Client Async Issue Form Link :
 	// https://github.com/OpenFeign/feign/issues/361
-	
-	// Below when we make parallel call to NSE and BSE, it is called as Scatter and Gather Design Pattern
+
+	// Below when we make parallel call to NSE and BSE, it is called as Scatter and
+	// Gather Design Pattern
 	@ApiOperation(value = "This API is much faster becuse we are doing async or call it parallel call to nse and bse apis")
 	@GetMapping("/getStockPricesFaster")
 	public StockPrices getStockPricesFaster(String stockName) throws InterruptedException, ExecutionException {
-		CompletableFuture<BSEStockPrice> bseCompletedFuture = bseRestTemplateClient.getBSEStockPrice(stockName);
+		CompletableFuture<BSEStockPrice> bseCompletedFuture = null;
+		try {
+			bseCompletedFuture = bseRestTemplateClient.getBSEStockPrice(stockName);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		CompletableFuture<NSEStockPrice> nseCompletableFuture = nseRestTemplateClient.getNSEStockPrice(stockName);
-		StockPrices prices = new StockPrices(bseCompletedFuture.get().getPrice(),
-				nseCompletableFuture.get().getPrice());
+		double bsePrice =0.0d;
+		if(bseCompletedFuture.get() != null) {
+			 bsePrice = bseCompletedFuture.get().getPrice();
+		}
+		else {
+			throw new RuntimeException("BSE Service is Down, please connect to that team");
+		}
+		
+		StockPrices prices = new StockPrices(
+				nseCompletableFuture.get().getPrice(), bsePrice);
 		return prices;
 	}
 

@@ -12,6 +12,7 @@ import com.finance.Entity.BSEStockPrice;
 
 @Service
 public class BSEService {
+
 	@Autowired
 	EntityManager entityManager;
 

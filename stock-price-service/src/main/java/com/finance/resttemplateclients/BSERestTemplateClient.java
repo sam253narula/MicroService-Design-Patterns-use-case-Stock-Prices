@@ -14,12 +14,18 @@ public class BSERestTemplateClient {
 
 	@Autowired
 	RestTemplate restTemplate;
-	
+
 	@Async
-	public CompletableFuture<BSEStockPrice> getBSEStockPrice(String stockName){
+	public CompletableFuture<BSEStockPrice> getBSEStockPrice(String stockName) {
 		String bseURL = "http://localhost:8081/getPrice?stockName=" + stockName;
-		BSEStockPrice bseStockPrice = restTemplate.getForObject(bseURL, BSEStockPrice.class);
-		CompletableFuture<BSEStockPrice> bseCompletedFuture = CompletableFuture.completedFuture(bseStockPrice);
+		CompletableFuture<BSEStockPrice> bseCompletedFuture = null;
+		try {
+			BSEStockPrice bseStockPrice = restTemplate.getForObject(bseURL, BSEStockPrice.class);
+			bseCompletedFuture = CompletableFuture.completedFuture(bseStockPrice);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
 		return bseCompletedFuture;
 	}
 }

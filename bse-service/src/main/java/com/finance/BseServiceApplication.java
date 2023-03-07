@@ -8,19 +8,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.finance.service.BSEService;
 
 @SpringBootApplication
-public class BseServiceApplication implements CommandLineRunner {
+public class BseServiceApplication /* implements CommandLineRunner */ {
 
-	@Autowired
-	BSEService bseService;
+	/*
+	 * @Autowired BSEService bseService;
+	 */
 
 	public static void main(String[] args) {
 		SpringApplication.run(BseServiceApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		System.out.println(bseService.getStockPrice("Tata Chem"));
-
-	}
+	/*
+	 * @Override public void run(String... args) throws Exception {
+	 * System.out.println(bseService.getStockPrice("Tata Chem"));
+	 * 
+	 * }
+	 */
 
 }
